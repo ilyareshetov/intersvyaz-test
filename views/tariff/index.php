@@ -4,7 +4,7 @@ use app\models\Tariff;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TariffSearch */
@@ -27,12 +27,31 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class'=>'kartik\grid\SerialColumn',
+                'contentOptions'=>['class'=>'kartik-sheet-style'],
+            ],
 
             'id',
             'price',
             'title',
-            'speed',
+            [
+                'class' => 'kartik\grid\EditableColumn',
+                'attribute' => 'speed',
+                'editableOptions' => [
+                    'header' => 'Speed',
+                    'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+                    'options' => [
+                        'pluginOptions' => ['min' => 0, 'max' => 5000]
+                    ],
+                    'formOptions' => ['action' => ['/tariff/edittariff']]
+                ],
+                'hAlign' => 'right',
+                'vAlign' => 'middle',
+                'width' => '7%',
+                'format' => ['integer'],
+                'pageSummary' => true
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Tariff $model, $key, $index, $column) {

@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\models\Tariff;
 use app\models\TariffSearch;
+use kartik\grid\EditableColumnAction;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -29,6 +31,24 @@ class TariffController extends Controller
                 ],
             ]
         );
+    }
+
+    public function actions()
+    {
+        return ArrayHelper::merge(parent::actions(), [
+            'edittariff' => [                                       // identifier for your editable column action
+                'class' => EditableColumnAction::class,     // action class name
+                'modelClass' => Tariff::class,                // the model for the record being edited
+                'outputValue' => function ($model, $attribute, $key, $index) {
+                    return (int) $model->$attribute;      // return any custom output value if desired
+                },
+                'outputMessage' => function($model, $attribute, $key, $index) {
+                    return '';                                  // any custom error to return after model save
+                },
+                'showModelErrors' => true,                        // show model validation errors after save
+                'errorOptions' => ['header' => '']                // error summary HTML options
+            ]
+        ]);
     }
 
     /**
